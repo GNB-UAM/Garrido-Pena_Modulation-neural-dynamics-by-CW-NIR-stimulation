@@ -10,6 +10,11 @@ If you use any of this code or material, please cite:
 Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Rafael, Rodriguez, Francisco B., Castilla, Javier, Tornero, Jesús, Varona, Pablo. Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation. Submitted.
 
 ## How to use it
+Load and activate conda environment from environment.yml file with the following commands:
+
+	conda env create -f environment.yml
+	conda activate Modulation-CW-NIR
+	
 ### Figure 1
 ### Figure 2
 ### Figure 3
@@ -17,5 +22,9 @@ Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Raf
 ### Figure 5
 ### Figure 6
 Run
- python bin/plot_day_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-60,100" -ex "" -p ./data/activity-dependent-example/
+	
+	python bin/plot_day_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-60,100" -ex "" -p ./data/activity-dependent-example/
 ### Figure 7
+Run
+	
+	python bin/plot_general_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-100,100" -ex "" -p ./data/activity-dependent-all-experiments/
