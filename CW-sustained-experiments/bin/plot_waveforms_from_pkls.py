@@ -10,10 +10,6 @@ import pandas as pd
 
 import matplotlib
 
-from matplotlib.patches import PathPatch
-from matplotlib.ticker import AutoLocator, AutoMinorLocator
-
-
 # custom library
 script_path = sys.argv[0][:sys.argv[0].rfind('/')]
 sys.path.append(script_path+'/../..')
@@ -55,7 +51,7 @@ def plot_metrics(group, metrics, verb=False, ext=''):
         g_name = g_name.replace('\'','')
 
         save_name = _dir + g_name + ext
-        plt.savefig(save_name+'.'+format, format=format, bbox_inches='tight')
+        plt.savefig(save_name+'.'+i_format, format=i_format, bbox_inches='tight')
         fig.clear()
 
 def normalize_by(df, type):
@@ -115,7 +111,7 @@ def plot_metrics_bars(df, metrics, verb=False, ext=''):
         g_name = g_name.replace('\'','')
 
         save_name = _dir + g_name + ext
-        plt.savefig(save_name+'_bars.'+format, format=format, bbox_inches='tight')
+        plt.savefig(save_name+'_bars.'+i_format, format=i_format, bbox_inches='tight')
         fig.clear()
 
 
@@ -131,7 +127,7 @@ lw = 60
 rw = 30
 
 # format = 'png'
-format = 'pdf'
+i_format = 'pdf'
 
 group = df.groupby(['file'])
 
@@ -177,7 +173,7 @@ for groups_names in group.groups.keys():
 
     plt.xlabel('ms')
     plt.ylabel('mV')
-    plt.savefig(_dir+groups_names+'_superpos.png', dpi=200, bbox_inches='tight')
+    plt.savefig(_dir+groups_names+'_superpos.'+i_format, dpi=200, bbox_inches='tight', format=i_format)
     fig.clear()
 
 
