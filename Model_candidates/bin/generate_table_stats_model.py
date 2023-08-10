@@ -2,18 +2,15 @@
 # Date: 30-01-2023
 
 import pickle as pkl
-from matplotlib.lines import Line2D
-# from stats_plot_functions import *
-# from superpos_from_model import get_first_line
 import glob
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import sys
 
-import superpos_functions as laser_utils
 script_path = sys.argv[0][:sys.argv[0].rfind('/')]
-sys.path.append(script_path+'/..')
+sys.path.append(script_path+'/../..')
+import superpos_functions as laser_utils
 import plot_utils as pu
 
 
@@ -156,7 +153,6 @@ import argparse
 # 	print("Example: python3 superpos_from_model.py ../../laser_model/HH/data/gna/ gna \"Gna simulation\" 0.001 8 20")
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--path", required=True, help="Path to the file to show stats from")
-ap.add_argument("-pe", "--path_extension", required=False,default="", help="Path extension to the files to show stats from")
 ap.add_argument("-sa", "--save", required=False, default='y', help="Option to save plot file")
 ap.add_argument("-sh", "--show", required=False, default='y', help="Option to show plot file")
 ap.add_argument("-dt", "--time_step", required=False, default=0.01, help="Sampling freq of -fs")
@@ -165,7 +161,6 @@ args = vars(ap.parse_args())
 
 
 path = args['path']
-ext_path = args['path_extension'] #name of the parameter varied during simulations
 show= True if args['show']=='y' else False 
 save= True if args['save']=='y' else False 
 
@@ -248,7 +243,6 @@ for i,dir_ in enumerate(dirs):
 		# print("Amplitude value:", amplitude)
 
 		slope_dep, slope_rep = laser_utils.get_slope(waveform, dt, n_points=n_points, plot=True)
-		# slopes_dep2, slopes_rep2 = get_slopes(sf.get_slope2, waveforms, slope_position=slope_position)
 		slopes_dep2, slopes_rep2 = laser_utils.get_slope2(waveform, dt, n_points=n_points, repol_points=repol_points, plot=True)
 
 
@@ -267,8 +261,6 @@ for i,dir_ in enumerate(dirs):
 	# 	plt.show()
 	plt.close()
 
-# exit()
-# print(all_df.keys())
 
 plt.rcParams.update({'font.size': 20})
 
