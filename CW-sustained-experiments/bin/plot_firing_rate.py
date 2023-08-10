@@ -1,5 +1,5 @@
 from math import ceil
-import copy
+import os
 import pickle as pkl
 import numpy as np
 import sys
@@ -80,8 +80,8 @@ def plot_grid(all_f_rates,all_isis,all_names, title, no_titles=False):
 
 	if save:
 		title += '_no_titles_' if no_titles else ''
-		fig_hist.savefig(_dir+'/FR/FR_images/'+title+'isis.pdf',format='pdf')
-		fig_bar.savefig(_dir+'/FR/FR_images/'+title+'bar.pdf',format='pdf')
+		fig_hist.savefig(_dir+'/FR_images/'+title+'isis.pdf',format='pdf')
+		fig_bar.savefig(_dir+'/FR_images/'+title+'bar.pdf',format='pdf')
 
 
 def plot_fr_errors(all_f_rates, title, linewidth=1):
@@ -99,7 +99,7 @@ def plot_fr_errors(all_f_rates, title, linewidth=1):
 
 	plt.tight_layout()
 	if save:
-		plt.savefig(_dir+'/TEST/FR/FR_images/'+title+'.pdf',format='pdf')
+		plt.savefig(_dir+'/FR_images/'+title+'.pdf',format='pdf')
 	# plt.show()
 	# plt.show()
 
@@ -124,9 +124,9 @@ def plot_diff_scatter(all_f_rates, title, all_names):
 	# 	ax.annotate(txt[txt.find('/'):txt.rfind('/')], (diffs[i], controls[i]),fontsize='8')
 	# plt.show()
 	if save:
-		print("Saving at: ", _dir+'/TEST/FR/FR_images/'+title+'_diff_bar.pdf')
-		plt.savefig(_dir+'/TEST/FR/FR_images/'+title+'_diff_bar.pdf',format='pdf')
-		plt.savefig(_dir+'/TEST/FR/FR_images/'+title+'_diff_bar.png',format='png')
+		print("Saving at: ", _dir+'/FR_images/'+title+'_diff_bar.pdf')
+		plt.savefig(_dir+'/FR_images/'+title+'_diff_bar.pdf',format='pdf')
+		plt.savefig(_dir+'/FR_images/'+title+'_diff_bar.png',format='png')
 
 def get_shortest_trial(data):
 	min_len = np.inf
@@ -153,9 +153,9 @@ def get_shortest_trial(data):
 _dir = sys.argv[1]
 
 try:
-	save = True if sys.argv[2]=='y' else False
+	save = False if sys.argv[2]=='n' else True
 except:
-	save = False
+	save = True
 
 
 files = glob.glob(_dir+"/*[!FR_data]/*.pkl")
@@ -180,11 +180,11 @@ data_dict = {'files':{}}
 
 
 try: # to open pkl files with the data
-	with open(_dir+"/TEST/FR/FR_data/all_f_rates.pkl", "rb") as fp:   # Unpickling
+	with open(_dir+"/all_f_rates.pkl", "rb") as fp:   # Unpickling
 		all_f_rates = pkl.load(fp)
-	with open(_dir+"/TEST/FR/FR_data/all_isis.pkl", "rb") as fp:   # Unpickling
+	with open(_dir+"/all_isis.pkl", "rb") as fp:   # Unpickling
 		all_isis = pkl.load(fp)
-	with open(_dir+"/TEST/FR/FR_data/all_names.pkl", "rb") as fp:   # Unpickling
+	with open(_dir+"/all_names.pkl", "rb") as fp:   # Unpickling
 		all_names = pkl.load(fp)
 	
 	load_n_compute = False
@@ -272,20 +272,24 @@ for rc, pkl_name in enumerate(files):
 		plt.savefig(pkl_name[:-4]+'_activity.png')
 	plt.close(fig)
 
-	# print(new_f_rates,f_rates)
-	# new_f_rates = copy.deepcopy(f_rates)
 	all_names.append(name)
 	all_f_rates.append(f_rates)
 	all_isis.append(isis)
 
 
 if load_n_compute:
-	with open(_dir+"/TEST/FR/FR_data/all_f_rates.pkl", "wb") as fp:   #Pickling
+	with open(_dir+"/FR_data/all_f_rates.pkl", "wb") as fp:   #Pickling
 		pkl.dump(all_f_rates, fp)
-	with open(_dir+"/TEST/FR/FR_data/all_isis.pkl", "wb") as fp:   #Pickling
+	with open(_dir+"/FR_data/all_isis.pkl", "wb") as fp:   #Pickling
 		pkl.dump(all_isis, fp)
-	with open(_dir+"/TEST/FR/FR_data/all_names.pkl", "wb") as fp:   #Pickling
+	with open(_dir+"/FR_data/all_names.pkl", "wb") as fp:   #Pickling
 		pkl.dump(all_names, fp)
+
+
+# Create images and logs directories
+
+os.makedirs(_dir+'FR_images', exist_ok=True)
+os.makedirs(_dir+'FR_log', exist_ok=True)
 
 
 
@@ -330,11 +334,11 @@ title = u"εControl-Recovery < 0.1 (N=%d)"%all_f_rates.shape[0]
 
 plot_fr_errors(all_f_rates, title)
 
-# with open(_dir+'/FR/FR_log/'+'recovery_files.log','w') as f:
+# with open(_dir+'/FR_log/'+'recovery_files.log','w') as f:
 	# f.write(str(all_names))
 	# f.write(str(all_names))
 
-np.savetxt( _dir+'/TEST/FR/FR_log/'+'recovery_files.log', all_names, fmt='%s')
+np.savetxt( _dir+'/FR_log/'+'recovery_files.log', all_names, fmt='%s')
 
 plot_grid(all_f_rates,all_isis,all_names, title)
 plot_grid(all_f_rates,all_isis,all_names, title, True)
@@ -358,9 +362,9 @@ title = 'Excitation (N=%d)'%all_f_rates.shape[0]
 plt.figure()
 plot_fr_errors(all_f_rates, title, linewidth=(all_f_rates.shape[0]%N_all)/10)
 
-# with open(_dir+'/FR/FR_log/'+'increase_files.log','w') as f:
+# with open(_dir+'/FR_log/'+'increase_files.log','w') as f:
 # 	f.write(str(all_names))
-np.savetxt( _dir+'/TEST/FR/FR_log/'+'increase_files.log', all_names, fmt='%s')
+np.savetxt( _dir+'/FR_log/'+'increase_files.log', all_names, fmt='%s')
 
 # plot_grid(all_f_rates,all_isis,all_names)
 
@@ -378,7 +382,7 @@ title = 'Inhibition (N=%d)'%all_f_rates.shape[0]
 plt.figure()
 plot_fr_errors(all_f_rates, title, linewidth=(all_f_rates.shape[0]%N_all)/10)
 
-with open(_dir+'/TEST/FR/FR_log/'+'inhibition_files.log','w') as f:
+with open(_dir+'/FR_log/'+'inhibition_files.log','w') as f:
 	f.write(str(all_names))
 
 
@@ -398,7 +402,7 @@ title = 'No change (N=%d)'%all_f_rates.shape[0]
 plt.figure()
 plot_fr_errors(all_f_rates, title, linewidth=(all_f_rates.shape[0]%N_all)/10)
 
-with open(_dir+'/TEST/FR/FR_log/'+'no-change_files.log','w') as f:
+with open(_dir+'/FR_log/'+'no-change_files.log','w') as f:
 	f.write(str(all_names))
 
 
