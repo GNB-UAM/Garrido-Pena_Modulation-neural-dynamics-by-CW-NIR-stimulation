@@ -356,7 +356,7 @@ print("Number of spikes discarded:", df_outliers.groupby(['file','type']).count(
 #######################################################################################
 
 # Get same number of spikes per file
-df.groupby(['file','type']).count().to_csv(_dir+'files_info_original.log')
+df.groupby(['file','type']).count().to_csv(_dir+exp_name+'/results/log/files_info_original.log')
 
 # n_spikes = 20
 n_spikes = -1
@@ -364,11 +364,11 @@ n_spikes = -1
 df, discard = laser_utils.get_sample(df, n_spikes)
 print("Number of files discarded:", len(discard.groupby('file').groups.keys()))
 print("Number of files discarded:", discard.groupby('file').groups.keys())
-with open(_dir+'discarded_files_less_%d.log'%n_spikes,'w') as f:
+with open(_dir+exp_name+'/results/log/discarded_files_less_%d.log'%n_spikes,'w') as f:
     f.write("Number of files discarded:" + str(list(discard.groupby('file').groups.keys())))
 print(df.groupby(['file','type']).count())
 
-df.groupby(['file','type']).count().to_csv(_dir+'files_info_reduced.log')
+df.groupby(['file','type']).count().to_csv(_dir+exp_name+'/results/log/files_info_reduced.log')
 ##############################################################################################
 
 # Plot boxplot/violin
