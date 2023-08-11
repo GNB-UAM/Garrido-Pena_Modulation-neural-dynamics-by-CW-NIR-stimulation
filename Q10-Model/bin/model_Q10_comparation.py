@@ -5,6 +5,7 @@ import glob
 # To import from child dir
 script_path = sys.argv[0][:sys.argv[0].rfind('/')]
 sys.path.append(script_path+'/..')
+sys.path.append(script_path+'/../..')
 import plot_utils as pu
 import matplotlib.pyplot as plt
 
