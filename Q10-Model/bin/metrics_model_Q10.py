@@ -1,3 +1,18 @@
+# -*- coding: utf-8 -*-
+# @File name: metrics_model_Q10.py
+# @Author: Alicia Garrido-Peña
+# @Date:   2023-08-04 13:54:09
+# @Contact: alicia.garrido@uam.es
+
+# "Copyright (c) 2023 Alicia Garrido-Peña. All Rights Reserved."
+# Use of this source code is govern by GPL-3.0 license that 
+# can be found in the LICENSE file
+
+# Code used for manuscript submitted. 
+# If you use any of this code, please cite:
+# Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Rafael, Rodriguez, Francisco B., Castilla, Javier, Tornero, Jesús, Varona, Pablo. Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation. Submitted.
+#
+#
 import os
 import math 
 import pickle as pkl
