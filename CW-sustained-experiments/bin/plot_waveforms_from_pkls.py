@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import find_peaks, peak_widths
 import glob
 import pandas as pd
-
+import os
 import matplotlib
 
 # custom library
@@ -65,8 +65,9 @@ def plot_metrics(group, metrics, verb=False, ext=''):
         g_name = g_name.replace(')','')
         g_name = g_name.replace('\'','')
 
-        save_name = _dir + g_name + ext
+        save_name = _dir + '/images/' + g_name.replace('/','_')  + ext
         plt.savefig(save_name+'.'+i_format, format=i_format, bbox_inches='tight')
+        print("Saving figure", save_name)
         fig.clear()
 
 def normalize_by(df, type):
@@ -125,8 +126,10 @@ def plot_metrics_bars(df, metrics, verb=False, ext=''):
         g_name = g_name.replace(')','')
         g_name = g_name.replace('\'','')
 
-        save_name = _dir + g_name + ext
+        save_name = _dir + '/images/' + g_name.replace('/','_')  + ext
         plt.savefig(save_name+'_bars.'+i_format, format=i_format, bbox_inches='tight')
+        print("Saving figure", save_name)
+
         fig.clear()
 
 
@@ -141,8 +144,11 @@ dt = 0.1
 lw = 60
 rw = 30
 
-# format = 'png'
-i_format = 'pdf'
+i_format = 'png'
+# i_format = 'pdf'
+
+# Creating output dir
+os.system("mkdir -p %s"%(_dir + '/images'))
 
 group = df.groupby(['file'])
 
@@ -188,7 +194,10 @@ for groups_names in group.groups.keys():
 
     plt.xlabel('ms')
     plt.ylabel('mV')
-    plt.savefig(_dir+groups_names+'_superpos.'+i_format, dpi=200, bbox_inches='tight', format=i_format)
+    save_name = _dir + '/images/'+groups_names.replace('/','_') +'_superpos.'+i_format
+    plt.savefig(save_name, dpi=200, bbox_inches='tight', format=i_format)
+    print("Saving figure", save_name)
+
     fig.clear()
 
 
