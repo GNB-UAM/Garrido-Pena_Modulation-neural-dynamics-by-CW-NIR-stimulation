@@ -100,7 +100,7 @@ def plot_boxplot(df):
 
 import seaborn as sns
 
-def plot_violin(df):
+def plot_violin(df, figsize=(30,10)):
     import numpy as np
 
     # Calculate mean for each category
@@ -111,7 +111,7 @@ def plot_violin(df):
 
     n_elements = len(df.groupby('file').groups.keys())
 
-    fig, axes = plt.subplots(nrows=1, ncols=len(metrics), figsize=(30,10), sharey=True)
+    fig, axes = plt.subplots(nrows=1, ncols=len(metrics), figsize=figsize, sharey=True)
     for i, metric in enumerate(metrics):
         ax = axes[i]
         sns.violinplot(data=df, ax=ax, y=metric, x='type', column=metrics, grid=False,
@@ -390,7 +390,7 @@ df.groupby(['file','type']).count().to_csv(_dir+exp_name+'/results/log/files_inf
 
 # plot_boxplot(df)
 # plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes.pdf'%n_spikes, format='pdf')
-plot_violin(df)
+plot_violin(df, figsize=(28.8,9.3))
 plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes_violin.pdf'%n_spikes, format='pdf')
 # plt.show()
 
@@ -475,7 +475,7 @@ if df_classifier is not None:
     # plot_boxplot(df)
     # plt.suptitle('Shoulder neurons')
     # plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes_shoulders.pdf'%n_spikes, format='pdf')
-    plot_violin(df)
+    plot_violin(df, figsize=(14.4,7.8))
     plt.suptitle('Shoulder neurons')
     plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes_shoulders_violin.pdf'%n_spikes, format='pdf')
 
@@ -499,7 +499,7 @@ if df_classifier is not None:
     # plot_boxplot(df)
     # plt.suptitle('Symmetrical neurons')
     # plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes_symmetrical.pdf'%n_spikes, format='pdf')
-    plot_violin(df)
+    plot_violin(df, figsize=(14.4,7.8))
     plt.suptitle('Symmetrical neurons')
     plt.savefig(output_path+'/images'+'/continuous_laser_results_%d-spikes_symmetrical_violin.pdf'%n_spikes, format='pdf')
 
