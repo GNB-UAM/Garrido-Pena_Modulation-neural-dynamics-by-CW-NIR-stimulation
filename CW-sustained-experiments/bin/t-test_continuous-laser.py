@@ -76,6 +76,7 @@ _dir = sys.argv[1]
 
 df = pd.read_pickle(_dir)
 
+
 # Normalize data
 metrics = ['duration','depolarization slope','repolarization slope','amplitude']
 
@@ -107,7 +108,7 @@ t_test(df_recovery, df_lasers, metrics, title, _dir, test=test)
 
 
 
-df,_ = laser_utils.get_sample(df, 20)
+df,_ = laser_utils.get_sample(df, 15)
 
 t_test_by_group(df, metrics, 'control', 'laser', "Control vs lasers\n", _dir, test=test)
 
