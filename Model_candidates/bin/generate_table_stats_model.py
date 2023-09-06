@@ -54,33 +54,6 @@ def get_first_line(file):
 
 	return first_line
 
-def plot_grid_by_metric():
-
-	# print(all_df['Cm'])
-	n_rows = 2
-	n_cols = 2
-	print(n_cols)
-	fig,axis = plt.subplots(figsize=(25,8),nrows = n_rows, ncols=n_cols)
-
-	key_colors = plt.cm.tab20(np.linspace(0,1,len(all_df.keys())))
-	key_colors = np.flip(key_colors, axis=0)
-
-	for rc,(key,value) in enumerate(all_df.items()):
-		boxprops = dict(linestyle='-', linewidth=2, color=key_colors[rc])
-		
-		for i,metric in enumerate(metrics):
-			value.boxplot(column=metric, ax=axis[i//2,i%2], positions=[rc], showfliers=False, showmeans=True, grid=False, fontsize=20, boxprops=boxprops)
-		
-			axis[i//2,i%2].set_title(metric)
-
-
-	for ai in axis:
-		for a in ai:
-			ax=a.axes
-			ax.set_xticklabels([list(all_df.keys())[n] for n in range(len(ax.get_xticklabels()))])
-
-	plt.tight_layout()	
-
 def create_custom_palette(colors, n_colors=100):
     # Define the color points for the custom palette
     # color_positions = [0, 0.5, 1]
@@ -113,7 +86,8 @@ def generate_table(df):
 
 
 	# Create a custom colormap that transitions from blue to white and back to blue
-	colors = ['royalblue','lightsteelblue', 'white','lightsteelblue', 'royalblue']
+	# colors = ['royalblue','white', 'white','lightsteelblue', 'royalblue']
+	colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
 	cm1 = create_custom_palette(colors)
 
 	# save color bar reference
@@ -123,7 +97,8 @@ def generate_table(df):
 	plt.savefig('color_bar_1'+'.pdf', format='pdf', bbox_inches='tight')
 
 	# Create map for amplitude
-	colors = ['white', 'lightsteelblue', 'royalblue']
+	# colors = ['white', 'lightsteelblue', 'royalblue']
+	colors = ['white', 'mediumseagreen', 'seagreen']
 	cm2 = create_custom_palette(colors)      
 
 	# save color bar reference
@@ -152,15 +127,16 @@ def generate_table(df):
 										 # vmin=0, vmax=ranges[3][1])
 
 	# text style
-	styler = styler.set_properties(**{'text-align': 'center', 'font-family': 'garuda','width': '120px'})
+	styler = styler.set_properties(**{'text-align': 'center', 'font-family': 'garuda','width': '180px'})
 	styler = styler.format(precision=3)
 
 	# Convert style object to HTML
 	html = styler.to_html()
 
-	# Save pdf with the table
 	import pdfkit
 	pdfkit.from_string(html, 'styled_table-%s.pdf'%name)
+
+	print('Saving styled_table-%s.pdf'%name)
 	
 
 import argparse
@@ -168,16 +144,12 @@ import argparse
 # 	print("Example: python3 superpos_from_model.py ../../laser_model/HH/data/gna/ gna \"Gna simulation\" 0.001 8 20")
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--path", required=True, help="Path to the file to show stats from")
-ap.add_argument("-sa", "--save", required=False, default='y', help="Option to save plot file")
-ap.add_argument("-sh", "--show", required=False, default='y', help="Option to show plot file")
 ap.add_argument("-dt", "--time_step", required=False, default=0.01, help="Sampling freq of -fs")
 
 args = vars(ap.parse_args())
 
 
 path = args['path']
-show= True if args['show']=='y' else False 
-save= True if args['save']=='y' else False 
 
 dt = float(args['time_step'])
 
