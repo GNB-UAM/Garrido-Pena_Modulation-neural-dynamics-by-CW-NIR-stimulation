@@ -141,8 +141,14 @@ df = pd.read_pickle(_dir+'/df_all_waveforms.pkl')
 colors = {'control':'cornflowerblue', 'laser':'firebrick','recovery':'olivedrab'}
 dt = 0.1
 
-lw = 60
-rw = 30
+# lw = 60
+# rw = 30
+
+lw = 80
+rw = 60
+
+scale_y = 10
+# scale_y = 1
 
 i_format = 'png'
 # i_format = 'pdf'
@@ -170,7 +176,7 @@ for groups_names in group.groups.keys():
         a_waveform = a_waveform-a_waveform[0]
         time = np.arange(a_waveform.size) * dt
         
-        plt.plot(time,a_waveform,color=colors[a_type],alpha=0.1)
+        plt.plot(time,a_waveform*scale_y,color=colors[a_type],alpha=0.1)
     
     type_group = group.get_group(groups_names).groupby('type')
     
@@ -190,12 +196,17 @@ for groups_names in group.groups.keys():
         mean = mean[int(lw/dt):-int(rw/dt)]
         time = np.arange(mean.size) *dt
 
-        plt.plot(time, mean, color=colors[group_name], linewidth=2)
+        plt.plot(time, mean*scale_y, color=colors[group_name], linewidth=2)
 
-    plt.xlabel('ms')
-    plt.ylabel('mV')
+    # plt.xlabel('ms')
+    # plt.ylabel('mV')
+    pu.remove_axes(plt.gca())
+    pu.small_x_axe(plt.gca(), label = 'ms')
+    pu.small_y_axe(plt.gca(), label = 'mV')
+
+
     save_name = _dir + '/images/'+groups_names.replace('/','_') +'_superpos.'+i_format
-    plt.savefig(save_name, dpi=200, bbox_inches='tight', format=i_format)
+    plt.savefig(save_name, dpi=300, bbox_inches='tight', format=i_format)
     print("Saving figure", save_name)
 
     fig.clear()
