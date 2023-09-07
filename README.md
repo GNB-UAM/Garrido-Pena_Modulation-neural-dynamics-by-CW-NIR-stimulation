@@ -45,10 +45,13 @@ In CW-sustained-experiments directory run:
 It will automatically save in FR_images the analysis output in PDF format. It will also create automatically a FR_log directory with the information of the files used. 
 
 ### Figure 3
-For this figure, it is necessary to run the models. The equations of the model are specified in the manuscript. An implementation of the models can be found in: https://github.com/angellareo/NEUN
+For this figure, it is necessary to simulate the models. The equations of the model are specified in the manuscript. 
+
+An implementation of the models can be found in: https://github.com/angellareo/NEUN
 
 Also code for the simulations can be found at:
 https://bitbucket.org/aligarpe/cgc-neuron/
+https://bitbucket.org/aligarpe/laser_model/src/master/
 
 To display the alignment of waveforms from Model_candidates directory run bin/superpos_from_model.py. This script requires parameters for the plot, for details run 
 
