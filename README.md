@@ -47,6 +47,9 @@ It will automatically save in FR_images the analysis output in PDF format. It wi
 ### Figure 3
 For this figure, it is necessary to run the models. The equations of the model are specified in the manuscript. An implementation of the models can be found in: https://github.com/angellareo/NEUN
 
+Also code for the simulations can be found at:
+https://bitbucket.org/aligarpe/cgc-neuron/
+
 To display the alignment of waveforms from Model_candidates directory run bin/superpos_from_model.py. This script requires parameters for the plot, for details run 
 
 	python bin/superpos_from_model.py  --help
@@ -68,6 +71,8 @@ It might require to install the following tool
 	sudo apt install -y wkhtmltopdf
 
 ### Figure 4
+To generate the data from the simulations, run the yaml files using the exe file *Q10-Model/bin/CGCNeuron-Q10*. The source and complete data can be found at https://bitbucket.org/aligarpe/cgc-neuron/
+
 To generate the superposition and barchart with the metrics run:
 
 	python bin/metrics_model_Q10.py -p data/general/dT5/
