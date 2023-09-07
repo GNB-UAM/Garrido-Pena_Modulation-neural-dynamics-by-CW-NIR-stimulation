@@ -70,9 +70,19 @@ y = y[np.where(y > min_y)] # 28.2 24
 
 # Downsample trace
 if downsample:
-	from scipy.signal import decimate
-	data1 = decimate(data1, q=5)
-	data2 = decimate(data2, q=5)
+	print("Downsampling data")
+	print(x.shape)
+	print(y.shape)
+	# from scipy.signal import resample
+	# x = resample(x, len(x)//2)
+	# y = resample(y, len(y)//2)
+	
+	x = x[::1000]
+	y = y[::1000]
+
+	print("Data downsampled")
+	print(x.shape)
+	print(y.shape)
 
 r_sq,Y_pred,slope = utils.do_regression(x,y,'temp',False)
 print("R2:", r_sq)

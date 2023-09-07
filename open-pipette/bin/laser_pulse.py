@@ -156,7 +156,10 @@ plt.savefig(output_path + 'pipette_pulse_mean_temp.'+f_format, format=f_format)
 # Plot the smoothed data
 print(V_sm.shape)
 plt.figure(figsize=(6, 5))
-plt.plot(t_wn, scale_y * smoothed_data, label=f'Smoothed Data\n (window_size={window_size})',color='slategray', alpha=1)
+# Calculate the corresponding reduced x-axis data from 0 to 6000
+# reduced_twn = np.linspace(0, round(max(t_wn)-min(t_wn)), len(t_wn))
+reduced_twn = np.arange(0, round(max(t_wn)-min(t_wn)), t_wn[1]-t_wn[0]) 
+plt.plot(reduced_twn, scale_y * smoothed_data, label=f'Smoothed Data\n (window_size={window_size})',color='slategray', alpha=1)
 
 plt.xlabel("Time (ms)")
 plt.ylabel("Temperature (ºC)")
@@ -170,4 +173,5 @@ with open(path[:-4] + '_pulse.log', 'w') as f:
     f.write("Pipette pulse estimation with %.2f"%slope+ "\n")
     f.write("Slope: "+str(slope)+ "\n")
 
-# plt.show()
+if show:
+    plt.show()
