@@ -157,7 +157,7 @@ def save_as_yaml(dict_file, path):
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 
-def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25, 0.03, 0.6], figsize=(10,10)):
+def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25, 0.03, 0.6], figsize=(10,8.5)):
 	time = np.arange(waveforms.shape[1])*dt
 	# tam = (15,10)
 	fig, ax = plt.subplots(figsize=figsize,constrained_layout=True)
@@ -190,9 +190,18 @@ def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25
 
 
 def plot_scatter(qs_df, param, metric, title, fig_format, save_name):	
-	qs_df.plot.scatter( metric,param, color=colors, figsize=(10,10), s=200)
+	if 'duration' in metric: # WARNING: Remove this to remove y_axis in duration
+		qs_df.plot.scatter( metric,param, color=colors, figsize=(11,8.5), s=200)
+	else:
+		qs_df.plot.scatter( metric,param, color=colors, figsize=(10,8.5), s=200)
 	ax = plt.gca()
-	if 'diff_T' in param:
+	if 'duration' in metric: # WARNING: Move this if after diff_T elif to remove y_axis in duration
+		# plt.ylabel(u"Δ"+param)
+		plt.ylabel(u"ΔTemperature ºC")
+		# plt.ylabel("Spike "+metric)
+		pu.remove_axes(ax)
+	
+	elif 'diff_T' in param:
 		pu.remove_axes(ax, ['right','top','left'])
 		ax.set_yticks([])
 		# ax.set_yticklabels([''])
@@ -200,10 +209,6 @@ def plot_scatter(qs_df, param, metric, title, fig_format, save_name):
 
 		# plt.title(title)
 
-	elif 'duration' in metric:
-		plt.ylabel(u"Δ"+param)
-		# plt.ylabel("Spike "+metric)
-		pu.remove_axes(ax)
 	else: 
 		pu.remove_axes(ax, ['right','top'])
 		ax.set_yticklabels([''])
