@@ -17,7 +17,7 @@ Load and activate conda environment from environment.yml file with the following
 	conda env create -f environment.yml
 	conda activate Modulation-CW-NIR
 	
-### Figure 1
+### Figure 2
 To plot the figures in panels A and B (the examples of the spike types) run:
 
 	python bin/plot_waveforms_from_pkls.py data/shoulder-example/
@@ -30,7 +30,7 @@ To plot the figure in panel C, run the following:
 
 Note that the df_all_waveforms.pkl must be stored in data/violins-data/. This script automatically generates a directory unless it already exists.
 
-Figure 1 in the appendix will be generated also after running the script if "-pc" option is included. 
+Figure 2 in the supporting material will be generated also after running the script if "-pc" option is included. 
 
 To run the t-test from the violin experiments run:
 
@@ -38,13 +38,13 @@ To run the t-test from the violin experiments run:
 
 The results from the statistical analysis will be displayed by terminal.
 
-### Figure 2
+### Figure 3
 In CW-sustained-experiments directory run:
 	
 	python bin/plot_firing_rate.py data/FR-analysis/
 It will automatically save in FR_images the analysis output in PDF format. It will also create automatically a FR_log directory with the information of the files used. 
 
-### Figure 3
+### Figure 4
 For this figure, it is necessary to simulate the models. The equations of the model are specified in the manuscript. 
 
 An implementation of the models can be found in: https://github.com/angellareo/NEUN
@@ -73,7 +73,7 @@ It might require to install the following tool
 	
 	sudo apt install -y wkhtmltopdf
 
-### Figure 4
+### Figure 5
 To generate the data from the simulations, run the yaml files using the exe file *Q10-Model/bin/CGCNeuron-Q10*. The source and complete data can be found at https://bitbucket.org/aligarpe/cgc-neuron/
 
 To generate the superposition and barchart with the metrics run:
@@ -84,7 +84,7 @@ To generate panel B with the temperature comparative run:
 
 	python bin/model_Q10_comparation.py ./data/general/q103_t10/ "Relation of dT with Q10=3";
 	
-### Figure 5
+### Figure 6
 
 To generate the superposition and metric/temperature relation, run:
 
@@ -92,11 +92,11 @@ To generate the superposition and metric/temperature relation, run:
 	
 It is necessary to run that script for all cases excluding temperature dependency. 
 
-### Figure 6
+### Figure 7
 Run
 	
 	python bin/plot_day_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-60,100" -ex "" -p ./data/activity-dependent-example/
-### Figure 7
+### Figure 8
 Run
 	
 	python bin/plot_general_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-100,100" -ex "" -p ./data/activity-dependent-all-experiments/
