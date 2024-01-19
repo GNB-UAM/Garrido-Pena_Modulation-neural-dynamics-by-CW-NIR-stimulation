@@ -267,5 +267,36 @@ for rc,(key,value) in enumerate(all_df.items()):
 # plot table 
 # get dataframe from dict
 DF_diffs = pd.concat(df_diffs, axis=1).T
-generate_table(DF_diffs[metrics])
-# generate table colored by metric
+# generate_table(DF_diffs[metrics])
+# # generate table colored by metric
+
+# generate_table with change percentages:
+
+# Get DF with percentages
+shoulder_values = [0.43,0.28,0.86,0.015]
+symmetric_values = [0.24,0.11,0.26,0.028]
+
+# Get normalized differences
+dict_percent = {}
+
+# For each model
+for rc,(model,metrics) in enumerate(df_diffs.items()):
+	dict_percent[model] = {}
+
+	# Iterate all metrics in model
+	
+	for i,(label, metric) in enumerate(metrics.iteritems()):
+		if 'param' in label:
+			continue
+		#Value is the dataframe for each Candidate/Neuron (directory in the path given)
+		average_reference = (shoulder_values[i-1] - symmetric_values[i-1])/2
+
+		dict_percent[model][label] = (average_reference - metric) * 100
+		# dict_percent[model][label] = (shoulder_values[i-1] - metric) * 100
+		# dict_percent[model][label] = (symmetric_values[i-1] - metric) * 100
+
+
+df_percent = pd.DataFrame(dict_percent)
+df_percent = df_percent.T
+
+generate_table(df_percent)
