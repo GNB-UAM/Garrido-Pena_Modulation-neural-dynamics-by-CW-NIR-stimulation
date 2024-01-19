@@ -66,9 +66,10 @@ cgc_ghva.pkl; cgc_ghva_spikes.pkl
 
 To generate the table in panel E run from Model-candidates path:
 
-	python3 ~/Workspace/scripts/laser/generate_table_stats_model.py -p ./ -sa y -sh n;
+	python3 bin/generate_table_stats_model.py -p ./;
 
 with all waveforms located in subdirectories in Model-candidates path.
+
 It might require to install the following tool 
 	
 	sudo apt install -y wkhtmltopdf
