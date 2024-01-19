@@ -87,7 +87,8 @@ def generate_table(df):
 
 	# Create a custom colormap that transitions from blue to white and back to blue
 	# colors = ['royalblue','white', 'white','lightsteelblue', 'royalblue']
-	colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
+	# colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
+	colors = ['rebeccapurple','mediumpurple','white','mediumpurple','rebeccapurple']
 	cm1 = create_custom_palette(colors)
 
 	# save color bar reference
@@ -98,7 +99,8 @@ def generate_table(df):
 
 	# Create map for amplitude
 	# colors = ['white', 'lightsteelblue', 'royalblue']
-	colors = ['white', 'mediumseagreen', 'seagreen']
+	# colors = ['white', 'mediumseagreen', 'seagreen']
+	colors = ['white','mediumpurple','rebeccapurple']
 	cm2 = create_custom_palette(colors)      
 
 	# save color bar reference
