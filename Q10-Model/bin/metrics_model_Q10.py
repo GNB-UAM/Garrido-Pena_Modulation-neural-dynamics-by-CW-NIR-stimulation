@@ -35,7 +35,7 @@ sys.path.append(script_path+'/../..')
 import superpos_functions as laser_utils
 import plot_utils as pu
 
-plt.rcParams.update({'font.size': 30})
+plt.rcParams.update({'font.size': 21})
 
 dt = 0.001
 def get_events(f_data, f_events, ms_r, ms_l, dt=0.001):
@@ -157,7 +157,7 @@ def save_as_yaml(dict_file, path):
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 
-def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25, 0.03, 0.6], figsize=(10,8.5)):
+def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25, 0.03, 0.6], figsize=(9,8.5)):
 	time = np.arange(waveforms.shape[1])*dt
 	# tam = (15,10)
 	fig, ax = plt.subplots(figsize=figsize,constrained_layout=True)
@@ -191,9 +191,9 @@ def plot_shape(waveforms, title, fig_format, all_labels, cmaplocation=[0.8, 0.25
 
 def plot_scatter(qs_df, param, metric, title, fig_format, save_name):	
 	if 'duration' in metric: # WARNING: Remove this to remove y_axis in duration
-		qs_df.plot.scatter( metric,param, color=colors, figsize=(11,8.5), s=200)
-	else:
 		qs_df.plot.scatter( metric,param, color=colors, figsize=(10,8.5), s=200)
+	else:
+		qs_df.plot.scatter( metric,param, color=colors, figsize=(9,8.5), s=200)
 	ax = plt.gca()
 	if 'duration' in metric: # WARNING: Move this if after diff_T elif to remove y_axis in duration
 		# plt.ylabel(u"Δ"+param)
