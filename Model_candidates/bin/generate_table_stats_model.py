@@ -70,26 +70,33 @@ def create_custom_palette(colors, n_colors=100):
 
 	return cmap
 
-def generate_table(df):
+def generate_table(df, plainbar=False, sufix=''):
 
 	# Create style object
 	styler = df.style
 
-	shoulder_values = [0.43,0.28,0.86,0.015]
-	symmetric_values = [0.24,0.11,0.26,0.028]
-	mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
-	maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
-	print(mins, maxs)
-	ranges = [(min_*0.8,max_*1.3) for min_,max_ in zip(mins,maxs)]
-	print(ranges)
-	print()
+	if not plainbar:
+		shoulder_values = [0.43,0.28,0.86,0.015]
+		symmetric_values = [0.24,0.11,0.26,0.028]
+		mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
+		maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
+		print(mins, maxs)
+		ranges = [(min_*0.8,max_*1.3) for min_,max_ in zip(mins,maxs)]
+		print(ranges)
+		print()
+	else:
+		mins = [0,0,0,0]
+		maxs = [100,100,100,100]
 
+	# ranges = [(min_*1,max_*1) for min_,max_ in zip(mins,maxs)]
+	# ranges = [(min_*0.1,200) for min_,max_ in zip(mins,maxs)]
 
 	# Create a custom colormap that transitions from blue to white and back to blue
 	# colors = ['royalblue','white', 'white','lightsteelblue', 'royalblue']
 	# colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
 	colors = ['rebeccapurple','mediumpurple','white','mediumpurple','rebeccapurple']
 	cm1 = create_custom_palette(colors)
+	cm1 = cmap = plt.get_cmap('Purples')
 
 	# save color bar reference
 	fig,ax = plt.subplots()
@@ -113,18 +120,18 @@ def generate_table(df):
 
 	# Apply background color gradient to each column based on min-max values.
 	styler = styler.background_gradient(cmap=cm1, subset=['duration'],
-										 low=mins[0], high=maxs[0],
-										 vmin=ranges[0][0], vmax=ranges[0][1])
+										 low=mins[0], high=maxs[0])
+										 # vmin=ranges[0][0], vmax=ranges[0][1])
 
 	styler = styler.background_gradient(cmap=cm1, subset=['depol.'],
-										 low=mins[1], high=maxs[1],
-										 vmin=ranges[1][0], vmax=ranges[1][1])
+										 low=mins[1], high=maxs[1])
+										 # vmin=ranges[1][0], vmax=ranges[1][1])
 	
 	styler = styler.background_gradient(cmap=cm1, subset=['repol.'],
-										 low=mins[2], high=maxs[2],
-										 vmin=ranges[2][0], vmax=ranges[2][1])
+										 low=mins[2], high=maxs[2])
+										 # vmin=ranges[2][0], vmax=ranges[2][1])
 
-	styler = styler.background_gradient(cmap=cm2, subset=['amplitude'],
+	styler = styler.background_gradient(cmap=cm1, subset=['amplitude'],
 										 low=mins[3], high=maxs[3])
 										 # vmin=0, vmax=ranges[3][1])
 
@@ -136,9 +143,9 @@ def generate_table(df):
 	html = styler.to_html()
 
 	import pdfkit
-	pdfkit.from_string(html, 'styled_table-%s.pdf'%name)
+	pdfkit.from_string(html, 'styled_table-%s.pdf'%(name.replace('.','')+sufix))
 
-	print('Saving styled_table-%s.pdf'%name)
+	print('Saving styled_table-%s.pdf'%(name.replace('.','')+sufix))
 	
 
 import argparse
@@ -273,8 +280,8 @@ DF_diffs = pd.concat(df_diffs, axis=1).T
 # generate_table with change percentages:
 
 # Get DF with percentages
-shoulder_values = [0.43,0.28,0.86,0.015]
-symmetric_values = [0.24,0.11,0.26,0.028]
+shoulder_values = {'duration':0.43,'depol.':0.28,'repol.':0.86,'amplitude':0.015}
+symmetric_values = {'duration':0.24,'depol.':0.11,'repol.':0.26,'amplitude':0.028}
 
 # Get normalized differences
 dict_percent = {}
@@ -291,7 +298,7 @@ for rc,(model,metrics) in enumerate(df_diffs.items()):
 		#Value is the dataframe for each Candidate/Neuron (directory in the path given)
 		average_reference = (shoulder_values[i-1] - symmetric_values[i-1])/2
 
-		dict_percent[model][label] = (average_reference - metric) * 100
+		dict_percent[model][label] = abs(average_reference - metric) * 100
 		# dict_percent[model][label] = (shoulder_values[i-1] - metric) * 100
 		# dict_percent[model][label] = (symmetric_values[i-1] - metric) * 100
 
@@ -299,4 +306,4 @@ for rc,(model,metrics) in enumerate(df_diffs.items()):
 df_percent = pd.DataFrame(dict_percent)
 df_percent = df_percent.T
 
-generate_table(df_percent)
+generate_table(df_percent, plainbar=True, sufix='percent')
