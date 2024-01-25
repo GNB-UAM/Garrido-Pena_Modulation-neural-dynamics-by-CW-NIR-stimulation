@@ -79,8 +79,12 @@ def generate_table(df, plainbar=False, sufix=''):
     styler = df.style
 
     # if not plainbar:
-    shoulder_values = [0.43,0.28,0.86,0.015]
-    symmetric_values = [0.24,0.11,0.26,0.028]
+    # shoulder_values = [0.43,0.28,0.86,0.015]
+    # symmetric_values = [0.24,0.11,0.26,0.028]
+
+    shoulder_values = [43, 28, 86, 1.5]
+    symmetric_values = [24, 11, 26, 2.8]
+
     mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
     maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
     print(mins, maxs)
@@ -271,13 +275,13 @@ for rc,(key,value) in enumerate(all_df.items()):
     max_ = value.max()
     min_ = value.min()
 
-    df_diffs[key] = abs((max_ - min_))/abs(max_)
+    df_diffs[key] = abs((max_ - min_))/abs(max_) * 100
 
 # plot table 
-# # get dataframe from dict
-# DF_diffs = pd.concat(df_diffs, axis=1).T
-# # generate table colored by metric
-# generate_table(DF_diffs[metrics_labels])
+# get dataframe from dict
+DF_diffs = pd.concat(df_diffs, axis=1).T
+# generate table colored by metric
+generate_table(DF_diffs[metrics_labels])
 
 # generate_table with change percentages:
 
@@ -303,7 +307,7 @@ for rc,(model,metrics) in enumerate(df_diffs.items()):
         #Value is the dataframe for each Candidate/Neuron (directory in the path given)
         # average_reference = (shoulder_values[label] - symmetric_values[label])/2 
         # average_reference = ((shoulder_values[label]))
-        average_reference = exp_mean_change[label]
+        average_reference = exp_mean_change[label] *100
 
         dict_percent[model][label] = (average_reference - metric)/average_reference * 100
         dict_percent['.ref'][label+'_ref'] = average_reference
