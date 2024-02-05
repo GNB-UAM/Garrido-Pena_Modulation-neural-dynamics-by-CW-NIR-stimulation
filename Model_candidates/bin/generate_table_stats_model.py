@@ -74,28 +74,49 @@ def create_custom_palette(colors, n_colors=100):
     return cmap
 
 def generate_table(df, plainbar=False, sufix=''):
+    if any('ref' in s for s in df.columns):
+        new_column_names = {}
+        for metric in metrics_labels:
+            new_column_names.update({'%s_ref' % metric: metric, metric: "%s exp-model %%change" % metric})
 
+        df.rename(columns=new_column_names, inplace=True)
+    print(df)
     # Create style object
     styler = df.style
 
-    # if not plainbar:
+    # # if not plainbar:
     # shoulder_values = [0.43,0.28,0.86,0.015]
     # symmetric_values = [0.24,0.11,0.26,0.028]
 
-    shoulder_values = [43, 28, 86, 1.5]
-    symmetric_values = [24, 11, 26, 2.8]
+    # shoulder_values = [43, 28, 86, 1.5]
+    # symmetric_values = [24, 11, 26, 2.8]
 
-    mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
-    maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
+    # mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
+    # maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
+    
+    # Min/max values from experimental data (run get_experimental_reference.py)
+    mins = [12.752406, 4.789056, 10.222668, 0.008378]
+    maxs = [53.395873, 51.441267, 86.872349, 6.527194]
+
+    RIC_low = [8.561363, 0, 0, 0]
+    RIC_up = [55.811974, 49.246278, 78.993933, 6.545098]
+
+    std_low = [12.912403, 0, 0.203289, 0]
+    std_up = [51.038393, 46.619157, 74.093582, 6.041610]
+    
+    mins = std_low
+    maxs = std_up
+
     print(mins, maxs)
-    ranges = [(min_*0.8,max_*1.3) for min_,max_ in zip(mins,maxs)]
+    # ranges = [(min_*0.8, max_*1.3) for min_,max_ in zip(mins, maxs)]
+    ranges = [(min_*1, max_*1) for min_,max_ in zip(mins, maxs)]
     print(ranges)
     print()
 
     # Create a custom colormap that transitions from blue to white and back to blue
     # colors = ['royalblue','white', 'white','lightsteelblue', 'royalblue']
     # colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
-    colors = ['rebeccapurple','mediumpurple','white','mediumpurple','rebeccapurple']
+    colors = ['rebeccapurple','mediumpurple','lavender','white','lavender','mediumpurple','rebeccapurple']
     cm1 = create_custom_palette(colors)
 
     # save color bar reference
@@ -107,7 +128,7 @@ def generate_table(df, plainbar=False, sufix=''):
     # Create map for amplitude
     # colors = ['white', 'lightsteelblue', 'royalblue']
     # colors = ['white', 'mediumseagreen', 'seagreen']
-    colors = ['white','mediumpurple','rebeccapurple']
+    colors = ['white','lavender','mediumpurple','rebeccapurple']
     cm2 = create_custom_palette(colors)      
 
     # cm3 = plt.get_cmap('Purples')
@@ -120,31 +141,72 @@ def generate_table(df, plainbar=False, sufix=''):
     plt.savefig('color_bar_2'+'.pdf', format='pdf', bbox_inches='tight')
 
 
-    # for metric in metrics:
-    styler = styler.background_gradient(cmap=cm3, vmin=-100, vmax=100)
+    # # # for metric in metrics:
+    # if "Experimental modulation" not in df.index:
+    #     styler = styler.background_gradient(cmap=cm3, vmin=-100, vmax=100)
+    # else:
+    cmaps = [cm1, cm1, cm1, cm1]
 
-    if any('ref' in s for s in df.columns):
-        # Apply background color gradient to each column based on min-max values.
-        styler = styler.background_gradient(cmap=cm1, subset=['duration_ref'],
-                                            low=mins[0], high=maxs[0],
-                                            vmin=ranges[0][0], vmax=ranges[0][1])
+    for i, metric in enumerate(metrics_labels):
+        # if metric != 'amplitude':
+        #     vmin = ranges[i][0]
+        # else:
+        #     vmin = 0
 
-        styler = styler.background_gradient(cmap=cm1, subset=['depol._ref'],
-                                            low=mins[1], high=maxs[1],
-                                            vmin=ranges[1][0], vmax=ranges[1][1])
+        if any('exp-model ' in s for s in df.columns):
+            styler = styler.background_gradient(cmap=cmaps[i], subset=["%s exp-model %%change"%metric],
+                                                # low=mins[i], high=maxs[i],
+                                                # vmin=ranges[i][0], vmax=ranges[i][1])
+                                                vmin=-100, vmax=100)
         
-        styler = styler.background_gradient(cmap=cm1, subset=['repol._ref'],
-                                            low=mins[2], high=maxs[2],
-                                            vmin=ranges[2][0], vmax=ranges[2][1])
+        print(metric)
+        print(df.columns)
+        # if metric+' exp-model' in df.columns:
+        styler = styler.background_gradient(cmap=cmaps[i], subset=[metric],
+                                            # low=mins[i], high=maxs[i],
+                                            vmin=ranges[i][0], vmax=ranges[i][1])
 
-        styler = styler.background_gradient(cmap=cm2, subset=['amplitude_ref'],
-                                            low=mins[3], high=maxs[3])
-                                         #  vmin=0, vmax=ranges[3][1])
+    # Experimental row:
+    # # Define a custom function to highlight a specific row
+    # def highlight_row(s, row_index):
+    #     return ['background-color: white; color: black' if idx == row_index else '' for idx, _ in enumerate(s)]
+
+    #     # # Apply the custom function to highlight the specific row
+    #     # styler = styler.apply(highlight_row, row_index=0, axis=0)
+
+    # if any('ref' in s for s in df.columns):
+
+    #     # Apply the custom function to highlight the specific row
+    #     for i, metric in zip(range(1, len(df.columns), 2), metrics_labels):
+    #         styler = styler.apply(highlight_row, row_index=i, axis=1)
+            # styler = styler.background_gradient(cmap=cmaps[i], subset=[metric],
+            #                                     # low=mins[i], high=maxs[i],
+            #                                     vmin=min(df[metric]), vmax=max(df[metric]))
+
+        # # Apply background color gradient to each column based on min-max values.
+        # styler = styler.background_gradient(cmap=cm1, subset=['duration_ref'],
+        #                                     # low=mins[0], high=maxs[0],
+        #                                     vmin=ranges[0][0], vmax=ranges[0][1])
+
+        # styler = styler.background_gradient(cmap=cm1, subset=['depol._ref'],
+        #                                     # low=mins[1], high=maxs[1],
+        #                                     vmin=ranges[1][0], vmax=ranges[1][1])
+        
+        # styler = styler.background_gradient(cmap=cm1, subset=['repol._ref'],
+        #                                     # low=mins[2], high=maxs[2],
+        #                                     vmin=ranges[2][0], vmax=ranges[2][1])
+
+        # styler = styler.background_gradient(cmap=cm2, subset=['amplitude_ref'],
+        #                                     # low=mins[3], high=maxs[3],
+        #                                     # vmin=0, vmax=ranges[3][1])
+        #                                     vmin=ranges[2][0], vmax=ranges[2][1])
+
+
 
     # text style
     styler = styler.set_properties(**{'text-align': 'center', 'font-family': 'garuda','width': '180px'})
-    styler = styler.format(precision=3)
-
+    styler = styler.format(precision=1)
+   
     # Convert style object to HTML
     html = styler.to_html()
 
@@ -269,19 +331,33 @@ plt.rcParams.update({'font.size': 20})
 metrics_labels = ['duration','depol.','repol.','amplitude']
 
 # Get normalized differences
-df_diffs = {}
+dict_diffs = {}
 for rc,(key,value) in enumerate(all_df.items()):
     #Value is the dataframe for each Candidate/Neuron (directory in the path given)
     max_ = value.max()
     min_ = value.min()
 
-    df_diffs[key] = abs((max_ - min_))/abs(max_) * 100
+    dict_diffs[key] = abs((max_ - min_))/abs(max_) * 100
 
 # plot table 
 # get dataframe from dict
-DF_diffs = pd.concat(df_diffs, axis=1).T
+df_diffs = pd.concat(dict_diffs, axis=1).T
+
+
+# exp_mean_change = {'duration': -32.66, 'depol.': 23.44, 'repol.': 42.07, 'amplitude': -1.33}
+# exp_mean_change = {'duration': 32.66, 'depol.': 23.44, 'repol.': 42.07, 'amplitude': 1.33}
+exp_mean_change = {'duration': 31.97, 'depol.': 22.55, 'repol.': 37.14, 'amplitude': 1.99}
+# df_diffs = df_diffs.append(pd.Series(exp_mean_change, name='Experimental modulation'))
+# df_diffs = pd.append(exp_mean_change)
+
+# Create a new DataFrame for the new row
+new_row_df = pd.DataFrame([exp_mean_change], index=['Experimental modulation'])
+
+# Concatenate the new row DataFrame with the existing DataFrame
+df_diffs = pd.concat([new_row_df, df_diffs])
+print(df_diffs)
 # generate table colored by metric
-generate_table(DF_diffs[metrics_labels])
+generate_table(df_diffs[metrics_labels])
 
 # generate_table with change percentages:
 
@@ -289,14 +365,12 @@ generate_table(DF_diffs[metrics_labels])
 shoulder_values = {'duration': 0.43, 'depol.': 0.28, 'repol.': 0.86, 'amplitude': 0.015}
 symmetric_values = {'duration': 0.24, 'depol.': 0.11, 'repol.': 0.26, 'amplitude': 0.028}
 
-exp_mean_change = {'duration': 0.30, 'depol.': 0.21, 'repol.': 0.29, 'amplitude': 0.016}
-
 # Get normalized differences
 dict_percent = {}
 
-dict_percent['.ref'] = {}
+dict_percent['Experimental modulation'] = {}
 # For each model
-for rc,(model,metrics) in enumerate(df_diffs.items()):
+for rc,(model,metrics) in enumerate(dict_diffs.items()):
     dict_percent[model] = {}
 
     # Iterate all metrics in model
@@ -307,10 +381,10 @@ for rc,(model,metrics) in enumerate(df_diffs.items()):
         #Value is the dataframe for each Candidate/Neuron (directory in the path given)
         # average_reference = (shoulder_values[label] - symmetric_values[label])/2 
         # average_reference = ((shoulder_values[label]))
-        average_reference = exp_mean_change[label] *100
+        average_reference = exp_mean_change[label]
 
         dict_percent[model][label] = (average_reference - metric)/average_reference * 100
-        dict_percent['.ref'][label+'_ref'] = average_reference
+        dict_percent['Experimental modulation'][label+'_ref'] = average_reference
         dict_percent[model][label+'_ref'] = metric
         # dict_percent[model][label] = abs(shoulder_values[label] - metric) * 100
         # dict_percent[model][label] = (symmetric_values[label] - metric) * 100
@@ -321,9 +395,9 @@ for rc,(model,metrics) in enumerate(df_diffs.items()):
 df_percent = pd.DataFrame(dict_percent)
 df_percent = df_percent.T
 
-generate_table(df_percent[['duration', 'depol.', 'repol.', 'amplitude']], plainbar=True, sufix='percent')
+# generate_table(df_percent[['duration', 'depol.', 'repol.', 'amplitude']], plainbar=True, sufix='percent')
 
 
 #antigua y nueva
 
-generate_table(df_percent[['duration', 'duration_ref', 'depol.', 'depol._ref', 'repol.', 'repol._ref', 'amplitude', 'amplitude_ref']], plainbar=False, sufix='percent_n_refs')
+generate_table(df_percent[['duration_ref', 'duration', 'depol._ref', 'depol.', 'repol._ref', 'repol.', 'amplitude_ref', 'amplitude']], plainbar=False, sufix='percent_n_refs')
