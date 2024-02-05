@@ -80,19 +80,9 @@ def generate_table(df, plainbar=False, sufix=''):
             new_column_names.update({'%s_ref' % metric: metric, metric: "%s exp-model %%change" % metric})
 
         df.rename(columns=new_column_names, inplace=True)
-    print(df)
+
     # Create style object
     styler = df.style
-
-    # # if not plainbar:
-    # shoulder_values = [0.43,0.28,0.86,0.015]
-    # symmetric_values = [0.24,0.11,0.26,0.028]
-
-    # shoulder_values = [43, 28, 86, 1.5]
-    # symmetric_values = [24, 11, 26, 2.8]
-
-    # mins = [min(a,b) for a,b in zip(shoulder_values,symmetric_values)]
-    # maxs = [max(a,b) for a,b in zip(shoulder_values,symmetric_values)]
     
     # Min/max values from experimental data (run get_experimental_reference.py)
     mins = [12.752406, 4.789056, 10.222668, 0.008378]
@@ -108,13 +98,11 @@ def generate_table(df, plainbar=False, sufix=''):
     maxs = std_up
 
     print(mins, maxs)
-    # ranges = [(min_*0.8, max_*1.3) for min_,max_ in zip(mins, maxs)]
     ranges = [(min_*1, max_*1) for min_,max_ in zip(mins, maxs)]
     print(ranges)
     print()
 
     # Create a custom colormap that transitions from blue to white and back to blue
-    # colors = ['royalblue','white', 'white','lightsteelblue', 'royalblue']
     # colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
     colors = ['rebeccapurple','mediumpurple','lavender','white','lavender','mediumpurple','rebeccapurple']
     cm1 = create_custom_palette(colors)
@@ -126,8 +114,6 @@ def generate_table(df, plainbar=False, sufix=''):
     plt.savefig('color_bar_1'+'.pdf', format='pdf', bbox_inches='tight')
 
     # Create map for amplitude
-    # colors = ['white', 'lightsteelblue', 'royalblue']
-    # colors = ['white', 'mediumseagreen', 'seagreen']
     colors = ['white','lavender','mediumpurple','rebeccapurple']
     cm2 = create_custom_palette(colors)      
 
@@ -141,66 +127,17 @@ def generate_table(df, plainbar=False, sufix=''):
     plt.savefig('color_bar_2'+'.pdf', format='pdf', bbox_inches='tight')
 
 
-    # # # for metric in metrics:
-    # if "Experimental modulation" not in df.index:
-    #     styler = styler.background_gradient(cmap=cm3, vmin=-100, vmax=100)
-    # else:
     cmaps = [cm1, cm1, cm1, cm1]
 
     for i, metric in enumerate(metrics_labels):
-        # if metric != 'amplitude':
-        #     vmin = ranges[i][0]
-        # else:
-        #     vmin = 0
-
         if any('exp-model ' in s for s in df.columns):
             styler = styler.background_gradient(cmap=cmaps[i], subset=["%s exp-model %%change"%metric],
-                                                # low=mins[i], high=maxs[i],
-                                                # vmin=ranges[i][0], vmax=ranges[i][1])
                                                 vmin=-100, vmax=100)
         
         print(metric)
         print(df.columns)
-        # if metric+' exp-model' in df.columns:
         styler = styler.background_gradient(cmap=cmaps[i], subset=[metric],
-                                            # low=mins[i], high=maxs[i],
                                             vmin=ranges[i][0], vmax=ranges[i][1])
-
-    # Experimental row:
-    # # Define a custom function to highlight a specific row
-    # def highlight_row(s, row_index):
-    #     return ['background-color: white; color: black' if idx == row_index else '' for idx, _ in enumerate(s)]
-
-    #     # # Apply the custom function to highlight the specific row
-    #     # styler = styler.apply(highlight_row, row_index=0, axis=0)
-
-    # if any('ref' in s for s in df.columns):
-
-    #     # Apply the custom function to highlight the specific row
-    #     for i, metric in zip(range(1, len(df.columns), 2), metrics_labels):
-    #         styler = styler.apply(highlight_row, row_index=i, axis=1)
-            # styler = styler.background_gradient(cmap=cmaps[i], subset=[metric],
-            #                                     # low=mins[i], high=maxs[i],
-            #                                     vmin=min(df[metric]), vmax=max(df[metric]))
-
-        # # Apply background color gradient to each column based on min-max values.
-        # styler = styler.background_gradient(cmap=cm1, subset=['duration_ref'],
-        #                                     # low=mins[0], high=maxs[0],
-        #                                     vmin=ranges[0][0], vmax=ranges[0][1])
-
-        # styler = styler.background_gradient(cmap=cm1, subset=['depol._ref'],
-        #                                     # low=mins[1], high=maxs[1],
-        #                                     vmin=ranges[1][0], vmax=ranges[1][1])
-        
-        # styler = styler.background_gradient(cmap=cm1, subset=['repol._ref'],
-        #                                     # low=mins[2], high=maxs[2],
-        #                                     vmin=ranges[2][0], vmax=ranges[2][1])
-
-        # styler = styler.background_gradient(cmap=cm2, subset=['amplitude_ref'],
-        #                                     # low=mins[3], high=maxs[3],
-        #                                     # vmin=0, vmax=ranges[3][1])
-        #                                     vmin=ranges[2][0], vmax=ranges[2][1])
-
 
 
     # text style
