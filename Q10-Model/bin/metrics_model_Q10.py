@@ -370,9 +370,11 @@ if qs_df.empty or len(qs_df.index)==1:
 	plt.savefig(path+'shape_zoom'+fig_format, format=fig_format[1:],dpi=200)
 	exit()
 
+# print(qs_df['diff_T'].size)
+# exit()
 
-
-colors = plt.cm.coolwarm(np.linspace(0,1,qs_df['diff_T'].size))
+# colors = plt.cm.coolwarm(np.linspace(0,1,qs_df['diff_T'].size))
+colors = plt.cm.coolwarm(np.linspace(0,1, 11))  # Value for T=5ºC
 # colors = plt.cm.get_cmap('Oranges')
 from cycler import cycler
 plt.gca().set_prop_cycle(cycler('color', colors))
@@ -400,7 +402,6 @@ plot_shape(small_waveforms, title, fig_format, all_labels, cmaplocation=[0,0.1,0
 if save:
 	plt.savefig(path+'shape_zoom_left_bar'+fig_format, format=fig_format[1:],dpi=200, bbox_inches='tight')
 	plt.savefig(path+'shape_zoom_left_bar'+'.pdf', format='pdf', bbox_inches='tight')
-
 
 metrics = set(qs_df.keys())-set(params.keys()).intersection(qs_df.columns)
 
