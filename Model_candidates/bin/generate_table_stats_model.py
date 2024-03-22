@@ -73,11 +73,11 @@ def create_custom_palette(colors, n_colors=100):
 
     return cmap
 
-def generate_table(df, plainbar=False, sufix=''):
+def generate_table(df, sufix='', cell_width='180px'):
     if any('ref' in s for s in df.columns):
         new_column_names = {}
         for metric in metrics_labels:
-            new_column_names.update({'%s_ref' % metric: metric, metric: "%s exp-model %%change" % metric})
+            new_column_names.update({'%s_ref' % metric: metric, metric: "%s<br>%%exp-model" % metric})
 
         df.rename(columns=new_column_names, inplace=True)
 
@@ -85,25 +85,22 @@ def generate_table(df, plainbar=False, sufix=''):
     styler = df.style
     
     # Min/max values from experimental data (run get_experimental_reference.py)
-    mins = [12.752406, 4.789056, 10.222668, 0.008378]
-    maxs = [53.395873, 51.441267, 86.872349, 6.527194]
+    # mins = [12.752406, 4.789056, 10.222668, 0.008378]
+    # maxs = [53.395873, 51.441267, 86.872349, 6.527194]
 
-    RIC_low = [8.561363, 0, 0, 0]
-    RIC_up = [55.811974, 49.246278, 78.993933, 6.545098]
+    # RIC_low = [8.561363, 0, 0, 0]
+    # RIC_up = [55.811974, 49.246278, 78.993933, 6.545098]
 
     std_low = [12.912403, 0, 0.203289, 0]
+    # std_low = [12.912403, -1.500709, 0.203289, -2.051181] # salen más oscuras las amplitudes
     std_up = [51.038393, 46.619157, 74.093582, 6.041610]
-    
+
     mins = std_low
     maxs = std_up
 
-    print(mins, maxs)
     ranges = [(min_*1, max_*1) for min_,max_ in zip(mins, maxs)]
-    print(ranges)
-    print()
 
     # Create a custom colormap that transitions from blue to white and back to blue
-    # colors = ['seagreen','mediumseagreen', 'white','mediumseagreen', 'seagreen']
     colors = ['rebeccapurple','mediumpurple','lavender','white','lavender','mediumpurple','rebeccapurple']
     cm1 = create_custom_palette(colors)
 
@@ -120,35 +117,42 @@ def generate_table(df, plainbar=False, sufix=''):
     # cm3 = plt.get_cmap('Purples')
     cm3 = cm1
     
-    # save color bar reference
-    fig,ax = plt.subplots()
-    pu.plot_cmap(fig, ax, [], location=[0.5,0,0.08,1], cmap=cm2) # [x, y, width, height]
-    fig.delaxes(ax) 
-    plt.savefig('color_bar_2'+'.pdf', format='pdf', bbox_inches='tight')
+    # # save color bar reference
+    # fig,ax = plt.subplots()
+    # pu.plot_cmap(fig, ax, [], location=[0.5,0,0.08,1], cmap=cm2) # [x, y, width, height]
+    # fig.delaxes(ax) 
+    # plt.savefig('color_bar_2'+'.pdf', format='pdf', bbox_inches='tight')
 
 
     cmaps = [cm1, cm1, cm1, cm1]
 
     for i, metric in enumerate(metrics_labels):
-        if any('exp-model ' in s for s in df.columns):
-            styler = styler.background_gradient(cmap=cmaps[i], subset=["%s exp-model %%change"%metric],
-                                                vmin=-100, vmax=100)
+        # if any('exp-model ' in s for s in df.columns):
+        #     per_col_name = "%s\nexp-model %%change"%metric
+        #     styler = styler.background_gradient(cmap=cmaps[i], subset=[per_col_name],
+        #                                         # vmin=-100, vmax=100)
+        #                                         vmin=df[per_col_name].min(), vmax=df[per_col_name].max())
         
-        print(metric)
-        print(df.columns)
         styler = styler.background_gradient(cmap=cmaps[i], subset=[metric],
                                             vmin=ranges[i][0], vmax=ranges[i][1])
 
 
+    # # Add border to odd columns
+    # border_styles = [
+    #     {'selector': 'td:nth-child(odd)', 'props': 'border-right: 3px solid black; padding:5px'}
+    # ]
+    # styler = styler.set_table_styles(border_styles)
+
     # text style
-    styler = styler.set_properties(**{'text-align': 'center', 'font-family': 'garuda','width': '180px'})
+    styler = styler.set_properties(**{'text-align': 'center', 'font-family': 'garuda', 'width': cell_width})
     styler = styler.format(precision=1)
    
     # Convert style object to HTML
     html = styler.to_html()
 
     import pdfkit
-    pdfkit.from_string(html, 'styled_table-%s.pdf'%(name.replace('.','')+sufix))
+    pdfkit.from_string(html, 'styled_table-%s.pdf'%(name.replace('.','')+sufix),
+                       options={'page-size': 'A4', 'orientation': 'Landscape'})
 
     print('Saving styled_table-%s.pdf'%(name.replace('.','')+sufix))
     
@@ -302,10 +306,28 @@ generate_table(df_diffs[metrics_labels])
 shoulder_values = {'duration': 0.43, 'depol.': 0.28, 'repol.': 0.86, 'amplitude': 0.015}
 symmetric_values = {'duration': 0.24, 'depol.': 0.11, 'repol.': 0.26, 'amplitude': 0.028}
 
+std_low = {'duration': 12.912403, 'depol.': 0, 'repol.': 0.203289, 'amplitude': 0}
+std_up = {'duration': 51.038393, 'depol.': 46.619157, 'repol.': 74.093582, 'amplitude': 6.041610}
+
+
+temp3 = {'duration': 25.46, 'depol.': 29.69, 'repol.': 36.97, 'amplitude': 0.77}
+temp5 = {'duration': 38.99, 'depol.': 38.35, 'repol.': 68.30, 'amplitude': 1.49}
+
+
+
 # Get normalized differences
 dict_percent = {}
 
 dict_percent['Experimental modulation'] = {}
+dict_percent['dT = 3'] = {}
+dict_percent['dT = 5'] = {}
+
+def gradient(value, min_, max_):
+    return (value - min_) / (max_-min_)
+
+def percentage(original, new):
+    return (new - original)/original * 100
+
 # For each model
 for rc,(model,metrics) in enumerate(dict_diffs.items()):
     dict_percent[model] = {}
@@ -320,9 +342,23 @@ for rc,(model,metrics) in enumerate(dict_diffs.items()):
         # average_reference = ((shoulder_values[label]))
         average_reference = exp_mean_change[label]
 
-        dict_percent[model][label] = (average_reference - metric)/average_reference * 100
+        min_ = std_low[label]
+        max_ = std_up[label]
+
+        dict_percent[model][label] = percentage(average_reference, metric)
+        dict_percent['dT = 3'][label] = percentage(average_reference, temp3[label])
+        dict_percent['dT = 5'][label] = percentage(average_reference, temp5[label])
+
         dict_percent['Experimental modulation'][label+'_ref'] = average_reference
+        dict_percent['dT = 3'][label+'_ref'] = temp3[label]
+        dict_percent['dT = 5'][label+'_ref'] = temp5[label]
         dict_percent[model][label+'_ref'] = metric
+
+        # dict_percent[model][label] = gradient(metric, min_, max_)
+        # dict_percent['Experimental modulation'][label] = gradient(average_reference, min_, max_)
+        # dict_percent['dT = 3'][label] = gradient(temp3[label], min_, max_)
+        # dict_percent['dT = 5'][label] = gradient(temp5[label], min_, max_)
+
         # dict_percent[model][label] = abs(shoulder_values[label] - metric) * 100
         # dict_percent[model][label] = (symmetric_values[label] - metric) * 100
         # dict_percent[model][label] = (shoulder_values[i-1] - metric) * 100
@@ -332,9 +368,6 @@ for rc,(model,metrics) in enumerate(dict_diffs.items()):
 df_percent = pd.DataFrame(dict_percent)
 df_percent = df_percent.T
 
-# generate_table(df_percent[['duration', 'depol.', 'repol.', 'amplitude']], plainbar=True, sufix='percent')
-
-
-#antigua y nueva
-
-generate_table(df_percent[['duration_ref', 'duration', 'depol._ref', 'depol.', 'repol._ref', 'repol.', 'amplitude_ref', 'amplitude']], plainbar=False, sufix='percent_n_refs')
+#with percentage
+columns = ['duration_ref', 'duration', 'depol._ref', 'depol.', 'repol._ref', 'repol.', 'amplitude_ref', 'amplitude']
+generate_table(df_percent[columns], sufix='percent_n_refs', cell_width='100px')
