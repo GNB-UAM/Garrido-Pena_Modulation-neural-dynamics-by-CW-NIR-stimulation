@@ -9,7 +9,7 @@ Also raw data can be provided under request: alicia.garrido@uam.es; pablo.varona
 
 If you use any of this code or material, please cite:
 
-Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Rafael, Rodriguez, Francisco B., Castilla, Javier, Tornero, Jesús, Varona, Pablo. Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation. 2023. Submitted.
+Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Rafael, Rodriguez, Francisco B., Castilla, Javier, Tornero, Jesús, Varona, Pablo. Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation. 2024. Submitted.
 
 ## How to use it
 Load and activate conda environment from environment.yml file with the following commands:
@@ -86,18 +86,24 @@ To generate panel B with the temperature comparative run:
 	python bin/model_Q10_comparation.py ./data/general/q103_t10/ "Relation of dT with Q10=3";
 	
 ### Figure 6
-
-To generate the superposition and metric/temperature relation, run:
-
-	python bin/metrics_model_Q10.py -p data/exclude_one/[parameter name]
-	
-It is necessary to run that script for all cases excluding temperature dependency. 
-
-### Figure 7
 Run
 	
 	python bin/plot_day_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-60,100" -ex "" -p ./data/activity-dependent-example/
-### Figure 8
+### Figure 7
 Run
 	
 	python bin/plot_general_shutter.py -sa y -sh n -pkl y -rastep 20 -rang "\-100,100" -ex "" -p ./data/activity-dependent-all-experiments/
+
+### Supplementary Figure 2
+
+To generate the superposition and metric/temperature relation dataframe for excluding and not excluding temperature, run:
+
+	python bin/metrics_model_Q10.py -p data/[exclude_one|only_one]/[parameter name]
+
+To generate the barchart comparative for both cases, run:
+ 	
+  	cd Q10-Model/data/[exclude_one|only_one]/Q103/T5
+	python ../../../../bin/get_q10_reference.py ./ "Only one parameter WITHOUT temperature dependency"
+	
+
+	
