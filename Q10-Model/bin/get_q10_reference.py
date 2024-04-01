@@ -145,8 +145,10 @@ print(i_pos)
 
 print(exp_mean_change)
 exp_mean_change = [value/100 for value in exp_mean_change]
+
 std_low = [value/100 for value in std]
 std_up = [value/100 for value in std]
+
 print(exp_mean_change)
 
 plt.bar(i_pos, exp_mean_change, label='Exp. change', width=0.1, alpha=0.9, color='black')

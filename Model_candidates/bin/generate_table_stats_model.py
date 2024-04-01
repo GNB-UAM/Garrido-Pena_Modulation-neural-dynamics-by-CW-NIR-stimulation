@@ -370,4 +370,5 @@ df_percent = df_percent.T
 
 #with percentage
 columns = ['duration_ref', 'duration', 'depol._ref', 'depol.', 'repol._ref', 'repol.', 'amplitude_ref', 'amplitude']
+
 generate_table(df_percent[columns], sufix='percent_n_refs', cell_width='100px')
