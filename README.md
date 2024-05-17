@@ -9,7 +9,7 @@ Also raw data can be provided under request: alicia.garrido@uam.es; pablo.varona
 
 If you use any of this code or material, please cite:
 
-Garrido-Peña, Alicia, Sánchez-Martín, Pablo, Reyes-Sanchez, Manuel, Levi, Rafael, Rodriguez, Francisco B., Castilla, Javier, Tornero, Jesús, Varona, Pablo. Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation. 2024. Submitted.
+Alicia Garrido-Peña, Pablo Sanchez-Martin, Manuel Reyes-Sanchez, Rafael Levi, Francisco B. Rodriguez, Javier Castilla, Jesus Tornero, Pablo Varona, Modulation of neuronal dynamics by sustained and activity-dependent continuous-wave near-infrared laser stimulation, Neurophoton. 11(2), 024308 (2024), doi: 10.1117/1.NPh.11.2.024308. 
 
 Please check the repositories related to this work. 
 
