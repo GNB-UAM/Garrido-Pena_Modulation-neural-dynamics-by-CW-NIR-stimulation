@@ -17,6 +17,8 @@ https://github.com/GNB-UAM/spike_predictor
 
 https://github.com/GNB-UAM/Neun
 
+And our Research's group website: www.ii.uam.es/~gnb
+
 
 ## How to use it
 Load and activate conda environment from environment.yml file with the following commands:
